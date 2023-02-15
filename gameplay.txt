@@ -1,0 +1,42 @@
+Sporenkriege
+
+Turns?
+    - One action = one turn
+    - Player chooses when turn is over
+    - 30 seconds to do stuff
+
+Multiplayer?
+    - LAN
+    - Server
+    - None
+
+Anticheat?
+    - Checksum w/ server
+    - Checksum w/o server
+    - Closed source
+
+Types of Fungi:
+    - ...
+
+Continuation?
+    - Player win condition
+    - Endless play
+
+
+
+Timeline:
+
+1. Game is opened
+2. Main menu?
+3. Choose fungus
+4. Other customization
+5. Game starts
+6. Player's turn
+    - Make upgrades
+    - Battle
+7. AI/Other player's turn?
+8. Go back to #6
+
+If player looses:
+    - Loss screen
+    Back to main menu(?)

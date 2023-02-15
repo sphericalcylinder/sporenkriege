@@ -13,6 +13,7 @@ pygame.event.set_allowed(None)
 
 CLOCK = pygame.time.Clock()
 
+# Get python dict from settings.json file
 def parse_settings():
     with open('settings.json', 'r') as f:
         return json.load(f)
@@ -41,5 +42,6 @@ def main():
         CLOCK.tick(settings['fps'])
 
 
+# Run main if not a module
 if __name__ == '__main__':
     main()
