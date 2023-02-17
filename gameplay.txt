@@ -1,9 +1,6 @@
 Sporenkriege
 
-Turns?
-    - One action = one turn
-    - Player chooses when turn is over
-    - 30 seconds to do stuff
+Turns: 30 seconds to do stuff
 
 Multiplayer?
     - LAN
@@ -16,27 +13,37 @@ Anticheat?
     - Closed source
 
 Types of Fungi:
+    - Fly agaric (looks like mario mushrooms)
+    - Puffballs; quicker spread
+    - Cordyceps; recruit extra spores/fungi
+
+Continuation: Endless play
+
+
+Goals/Quests:
     - ...
 
-Continuation?
-    - Player win condition
-    - Endless play
 
+Tendrils, Converges, and Hubs:
+    Tendrils will automatically converge into nodes. These nodes help give an idea of progress: e.g. a competing fungus will take nodes at a time, and tendrils touching it will be disconnected.
+    Hubs can be manually built. Hubs are stronger against infection than nodes, but take construction points or whatever (haven't decided) to place.
 
 
 Timeline:
 
 1. Game is opened
-2. Main menu?
+2. Main menu
 3. Choose fungus
-4. Other customization
-5. Game starts
-6. Player's turn
+4. Game starts
+5. Player's turn (30 Seconds)
     - Make upgrades
+        - Bias grow direction
     - Battle
-7. AI/Other player's turn?
-8. Go back to #6
+    - Generally direct growth
+    - Use mushrooms & abilities to defeat threats (lol)
+6. Growth happens & new threats appear
+7. Go back to #5
 
-If player looses:
+If player loses:
     - Loss screen
     Back to main menu(?)
