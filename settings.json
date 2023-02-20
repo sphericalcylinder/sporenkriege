@@ -1,5 +1,10 @@
 {
     "resolution": [640, 480],
     "bg": [50,50,50],
+    
+    "slope": "0.1",
+    "enemy_randomness": "0.3",
+
+    "enemy_player_separation": 1,
     "fps": 30
 }
