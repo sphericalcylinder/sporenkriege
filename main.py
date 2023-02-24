@@ -3,6 +3,7 @@ import pygame
 import json
 import Classes
 import math, random
+import time
 
 # Initialize pygame
 pygame.init()
@@ -32,10 +33,20 @@ CLOCK = pygame.time.Clock()
 
 closegame = False
 
-
+FUNGUSCOLOUR = '#8B4513'
 enemy_group = pygame.sprite.Group()
 tendril_group = pygame.sprite.Group()
 node_group = pygame.sprite.Group()
+hub_group = pygame.sprite.Group()
+
+keys = {
+    pygame.K_g: False,
+    pygame.K_a: False
+}
+
+keypressed = False
+mousedown = False
+
 
 def mainmenu(gamestate):
 
@@ -91,13 +102,56 @@ def check_win_loss(player_nubs, gamestate):
         return 2
     #Wubby note - decide on win states later (2/20/23)
 
-def player_turn():
-    pass
+
+
+def player_turn(mouse_button_up):
+    management_timer = time.time() + 30
+    while time.time() < management_timer:
+        
+
+def draw():
+    hub_group.draw(MAP)
+    node_group.draw(MAP)
+    tendril_group.draw(MAP)
+
+    # Update the screen
+    pygame.display.update()
+    # Set fps
+    CLOCK.tick(settings['fps'])
+
+#Wubby note - LIFE PRO TIP - if you can't figure something out, and you know you've done it before, stop being an idiot. (2/23/23)
+def events():
+    global mousedown, keypressed
+    # Handle events
+    keypressed = False
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit(0)
+            
+        if event.type == pygame.KEYDOWN:
+            try:
+                keys[event.key] = True
+            except KeyError:
+                pass
+            keypressed = True
+        
+        if event.type == pygame.KEYUP:
+            try:
+                keys[event.key] = False
+            except KeyError:
+                pass
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mousedown = True
+        
+        if event.type == pygame.MOUSEBUTTONUP:
+            mousedown = False
 
 def game(gamestate):
 
     game_iteration = 0
-    drawlist = []
+    
     
     while gamestate == 1:
         #GAME LOGIQUE!!!!!
@@ -106,26 +160,16 @@ def game(gamestate):
         # Clear screen
         SCREEN.fill((0, 0, 0))
 
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit(0)
+        events()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_g:
-                    print('new hub')
-
-        # Draw stuff
+        if keys[pygame.K_g] == True:
+            print
         
 
-        for i in drawlist:
-            SCREEN.blit(i)
+        # Draw stuff
+        draw()
 
-        # Update the screen
-        pygame.display.update()
-        # Set fps
-        CLOCK.tick(settings['fps'])
+    return None
     
 
 # Main function
