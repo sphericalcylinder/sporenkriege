@@ -1,7 +1,6 @@
 import pygame
 import random
-from numpy import sort
-
+import time
 
 class Button(pygame.sprite.Sprite):
 
@@ -13,6 +12,21 @@ class Button(pygame.sprite.Sprite):
 
     def isclicked(self, clickx, clicky) -> bool:
         if clickx > self.x and clickx < self.x+self.w and clicky > self.y and clicky < self.y+self.h:
+            return True
+        else:
+            return False
+
+class Timer():
+
+    def __init__(self, delay) -> None:
+        self.WAIT = delay
+        self.timer = time.time()
+    
+    def start(self):
+        self.timer = time.time() + self.WAIT
+
+    def isdone(self) -> bool:
+        if time.time() > self.timer:
             return True
         else:
             return False
@@ -52,13 +66,19 @@ class Tendril(pygame.sprite.Sprite):
 
 class Hub(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, color) -> None:
+    def __init__(self, x, y, color, ghost) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.x, self.y = x, y
         self.color = color
+        self.ghost = ghost
 
-    def draw(self, map):
-        pygame.draw.circle(map, self.color, (self.x, self.y), 10.0)
+    def draw(self, map: pygame.surface.Surface):
+        if self.ghost:
+            transparent = pygame.surface.Surface((10, 10), pygame.SRCALPHA)
+            pygame.draw.circle(transparent, self.color, (0, 0), 10.0)
+            map.blit(transparent, (self.x, self.y))
+        else:
+            pygame.draw.circle(map, self.color, (self.x, self.y), 10.0)
 
 
 
@@ -67,12 +87,10 @@ class Fungus(pygame.sprite.Sprite):
     def __init__(self, x, y, color) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.x, self.y = x, y
-        self.image = pygame.image.load(color)
-        self.w, self.h = self.image.get_width(), self.image.get_height()
         self.health = 100
         self.bias = [0, 0]
         self.switch = 0
-        self.network = []
+        self.network = [Hub(self.x, self.y, color, False)]
 
     def grow(self):
         if self.x == self.bias[0] and self.y == self.bias[1]:
@@ -86,6 +104,10 @@ class Fungus(pygame.sprite.Sprite):
         if self.switch == 1:
             self.network.append(Node(0, 0, None))
             self.switch = 0
+
+    def draw(self, map):
+        for i in self.network:
+            i.draw(map)
 
 
 class Player(Fungus):

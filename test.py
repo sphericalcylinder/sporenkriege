@@ -31,6 +31,7 @@ CLOCK = pygame.time.Clock()
 
 node = Classes.Node(10, 10, '#8B4513')
 tendril = Classes.Tendril((10, 10), (50, 50), '#8B4513')
+hub = Classes.Hub(50, 50, '#8B4513', False)
 
 
 while True:
@@ -46,6 +47,7 @@ while True:
     #MAP = pygame.transform.scale(MAP, (128, 128))
     node.draw(MAP)
     tendril.draw(MAP)
+    hub.draw(MAP)
     #MAP = pygame.transform.scale(MAP, (256, 256))
     SCREEN.blit(MAP, (0,0))
 
