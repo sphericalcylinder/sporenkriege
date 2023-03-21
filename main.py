@@ -33,6 +33,8 @@ MAP = pygame.surface.Surface((512, 512))
 
 CLOCK = pygame.time.Clock()
 
+PLAYER = Classes.Player(random.randint(12, 500), random.randint(12, 500))
+
 closegame = False
 
 FUNGUSCOLOUR = '#8B4513'
@@ -40,7 +42,7 @@ enemy_group = []
 tendril_group = []
 node_group = []
 hub_group = []
-construction_ghost = []
+construction_ghost = None
 
 spawn_blacklist = [(0, 0)]
 
@@ -51,6 +53,7 @@ keys = {
 
 keypressed = False
 mousedown = False
+ghosted_hub = False
 
 
 def mainmenu(gamestate):
@@ -69,7 +72,7 @@ def mainmenu(gamestate):
                 if play.isclicked(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
                     return 1
 
-        # Draw stuff
+        # Draw stuffazalsdfjk;alsdfjk;jkl;adsefjkl;adsfsdjklflsdfkgondfv;alsdfkmnjlvhjnkafdgmviml;adsovkfgnwjdf hsavnvhbjkdsksdjkxvcmfnmhpuiodsfvsodcuikfwksechjmvci hunmovfhn8m9fveenwiehuvvfimohsnhjkmaefrsvgeirvyumsjervhbknufiimoevbswnuiwhdfvciownevjcdhmujn8m9dsvfjnimoavdesnfvhudkasnviowhemumiosvxumfnmuvoujnimefpqrwcuiwfehorvjkmaveiwnmuioaefvwdsdvnefsevjnmdk jkafwervwj wfemkvjmwvecvwacer jnmvacevaisdfujmnopcceiosmevjniawuiehomvmepiouwropafsidiojdfvaefcsujmndkindimoujhnmdfviasnmdfjksavcdpjnimoscfeofjnimnhjerfimoacsefuvnimofsdvcsmdvhjnhjndmfvcnhjmacsdfvujnksdfahungaviunmahvioumpdfvcnimmviofdndfvsjjnikmpdfjkmlfvjnmdknajsdfcmvsdvnmfjkanehrfgvgvmhjiktsidrfcvjkmadfvnsmcjsjdfcvhkmnansdfhjidfgsvjhunvnmcsdcvnmjsdanmfaisdfvjklm;hjnmdfhjmogvsfdvejimafsmdfcvnakhjnmscdfvagvhbjndkfgvhjlmghjnkrgldhjkmvglhjnkmsmdrgvhusmdfghjsmdrhjknshdfgvmugvjnkmejkmgsdfvnhjsdfgbhjkmlsjdfgvhklmnsdfgvjmhsjdfgvhklmdifgvhjklmnskdfvjnlhnglvhjkm
         SCREEN.blit(play.image, (play.x, play.y))
 
         # Update the screen
@@ -94,22 +97,33 @@ def check_win_loss(player_nubs, gamestate):
         return 2
     # Wubby note - decide on win states later (2/20/23)
 
-
-def player_turn(mouse_button_up, ghosted_hub):
-    if keys[pygame.K_g] and ghosted_hub == None:
+def player_turn():
+    global construction_ghost, ghosted_hub
+    if keys[pygame.K_g] and ghosted_hub == False:
         #Q: How do I add an object? A: MAGIC
-        ghosted_hub = Classes.Hub(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], '#8B4513', False)
-        construction_ghost.append(ghosted_hub)
+        ghosted_hub = True
+
+    if ghosted_hub == True and not mousedown:
+        construction_ghost = Classes.Hub(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], '#ffffff', True)
+    
+    if mousedown and ghosted_hub == True:
+        construction_ghost = None
+        hub_group.append(Classes.Hub(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], '#8B4513', False))
+        ghosted_hub = False
 
 def draw():
+    # Clear screen
+    MAP.fill("#000000")
+    SCREEN.fill("#000000")
+
     for hub in hub_group:
         hub.draw(MAP)
     for node in node_group:
         node.draw(MAP)
     for tendril in tendril_group:
         tendril.draw(MAP)
-    for ghost in construction_ghost:
-        ghost.draw(MAP)
+    if construction_ghost:
+        construction_ghost.draw(MAP)
     for enemy in enemy_group:
         enemy.draw(MAP)
 
@@ -167,15 +181,9 @@ def enemy_turn(game_iteration, timer):
         spawn_x, spawn_y = random.choice(list(valid_x)), random.choice(list(valid_y))
         enemy_group.append(Classes.Enemy(spawn_x, spawn_y, '#8B4513'))
 
-        spawn_blacklist.append((spawn_x-1, spawn_y-1))
-        spawn_blacklist.append((spawn_x,   spawn_y-1))
-        spawn_blacklist.append((spawn_x+1, spawn_y-1))
-        spawn_blacklist.append((spawn_x-1, spawn_y  ))
-        spawn_blacklist.append((spawn_x,   spawn_y  ))
-        spawn_blacklist.append((spawn_x+1, spawn_y  ))
-        spawn_blacklist.append((spawn_x-1, spawn_y+1))
-        spawn_blacklist.append((spawn_x,   spawn_y+1))
-        spawn_blacklist.append((spawn_x+1, spawn_y+1))
+        for i in range(-2, 3):
+            for j in range(-2, 3):
+                spawn_blacklist.append((spawn_x+i, spawn_y+j))
         enemy_timer.start()
         while not enemy_timer.isdone():
             for event in pygame.event.get():
@@ -186,6 +194,7 @@ def enemy_turn(game_iteration, timer):
             draw()
 
 def game(gamestate):
+    global construction_ghost, ghosted_hub
 
     game_iteration = 0
     timer = Classes.Timer(5)
@@ -193,26 +202,24 @@ def game(gamestate):
 
     while gamestate == 1:
         # GAME LOGIQUE!!!!!
-
-        # Clear screen
-        SCREEN.fill((0, 0, 0))
+        #nvm we're not doing game logic
 
         events()
-        ghosted_hub = None
-        
+
 
         if not timer.isdone() and game_iteration % 2 == 0:
-            player_turn(not mousedown, ghosted_hub)
+            player_turn()
         elif timer.isdone():
+            construction_ghost = None
+            ghosted_hub = False
+            draw()
             game_iteration += 1
-            ghosted_hub = None
             timer.start()
 
         if not timer.isdone() and game_iteration % 2 == 1:
             enemy_turn(game_iteration, timer)
         elif timer.isdone():
             game_iteration += 1
-            ghosted_hub = None
             timer.start()
 
         # Draw stuff

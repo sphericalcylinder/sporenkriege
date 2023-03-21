@@ -74,9 +74,9 @@ class Hub(pygame.sprite.Sprite):
 
     def draw(self, map: pygame.surface.Surface):
         if self.ghost:
-            transparent = pygame.surface.Surface((10, 10), pygame.SRCALPHA)
-            pygame.draw.circle(transparent, self.color, (0, 0), 10.0)
-            map.blit(transparent, (self.x, self.y))
+            transparent = pygame.surface.Surface((20, 20), pygame.SRCALPHA)
+            pygame.draw.circle(transparent, self.color, (10, 10), 10.0)
+            map.blit(transparent, (self.x-10, self.y-10))
         else:
             pygame.draw.circle(map, self.color, (self.x, self.y), 10.0)
 

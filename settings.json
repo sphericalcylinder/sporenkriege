@@ -5,6 +5,7 @@
     "slope": "0.1",
     "enemy_randomness": "0.3",
 
-    "enemy_player_separation": 1,
-    "fps": 30
+    "fps": 30,
+
+    "hub_color": "#8B4513"
 }
